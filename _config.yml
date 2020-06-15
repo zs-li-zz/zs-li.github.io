@@ -5,8 +5,8 @@ highlighter:      rouge
 title:            Zishuo Li
 tagline:          'Research and Stuff'
 description:      'I am a PhD Candidate at Tsinghua University, China.'
-url:              http://zs-li.github.io
-baseurl:          ''
+url:              https://zs-li.github.io/
+baseurl:          'https://zs-li.github.io/'
 cover_image: /public/pic.jpg
 
 author:
