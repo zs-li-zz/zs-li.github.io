@@ -21,8 +21,6 @@ paginate_path:    "/notes/page:num"
 pages_list:
   - name: Research
     loc: /research.html
-  - name: Teaching
-    loc: /teaching.html
   - name: Publication
     loc: /publication.html
   - name: Notes
