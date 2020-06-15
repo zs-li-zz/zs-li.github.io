@@ -1,0 +1,35 @@
+/* Change the background of theorem to gray */
+div.theorem {
+    padding:5px 0px;
+    margin:5px 0px;
+    background-color: #eee;
+}	
+
+div.lemma {
+    padding:5px 0px;
+    margin:5px 0px;
+    background-color: #eee;
+}
+
+div.remark {
+    padding:5px 0px;
+    margin:5px 0px;
+    background-color: #eee;
+}
+
+div.definition {
+    padding:5px 0px;
+    margin:5px 0px;
+    background-color: #eee;
+}
+
+div.proposition {
+    padding:5px 0px;
+    margin:5px 0px;
+    background-color: #eee;
+}
+
+/* script size caption for figure */
+div.figure p{
+  font-size: 0.75rem;
+}

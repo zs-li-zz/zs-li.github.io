@@ -1,0 +1,24 @@
+#+OPTIONS:   H:4 num:nil toc:nil author:nil timestamp:nil tex:t 
+#+BEGIN_EXPORT HTML
+---
+layout: default
+title: Home
+---
+#+END_EXPORT
+
+* Biography
+
+Yilin Mo is an Associate Professor in the Department of Automation, Tsinghua University. He received his Ph.D. In Electrical and Computer Engineering from Carnegie Mellon University in 2012 and his Bachelor of Engineering degree from Department of Automation, Tsinghua University in 2007. Prior to his current position, he was a postdoctoral scholar at Carnegie Mellon University in 2013 and California Institute of Technology from 2013 to 2015. He held an assistant professor position in the  School of Electrical and Electronic Engineering at Nanyang Technological University from 2015 to 2018. His research interests include secure control systems and networked control systems, with applications in sensor networks and power grids.
+
+* Contact
+
+*Yilin Mo*
+
+Associate Professor
+
+[[https://www.tsinghua.edu.cn/publish/auen][Department of Automation]]\\
+[[https://www.tsinghua.edu.cn][Tsinghua University]]\\
+FIT Building 3-613\\
+Beijing, China, 100084\\
+Tel: +8610 62792438\\
+E-mail: [[mailto:ylmo@tsinghua.edu.cn][ylmo@tsinghua.edu.cn]]
