@@ -2,16 +2,16 @@
 highlighter:      rouge
 
 # Setup
-title:            Yilin Mo
+title:            Zishuo Li
 tagline:          'Research and Stuff'
-description:      'I am an Associate Professor at Tsinghua University, China.'
-url:              http://yilinmo.github.io
+description:      'I am a PhD Candidate at Tsinghua University, China.'
+url:              http://zs-li.github.io
 baseurl:          ''
-cover_image: /public/zion.png
+cover_image: /public/pic.jpg
 
 author:
-name:           'Yilin Mo'
-email:            ylmo@tsinghua.edu.cn
+name:           'Zishuo Li'
+email:            lizs19@mails.tsinghua.edu.cn
 
 paginate:         5
 paginate_path:    "/notes/page:num"
@@ -34,7 +34,7 @@ pages_list:
 # To select font, go to: http://www.youziku.com/Home/FontSelect
 # or you can remove the title_cn attribute
 
-#title_cn: (莫一林)
+#title_cn:
 cn_font_family: minijianxixingkai351678
 cn_css: http://www.youziku.com/webfont/CSS/15f8f8252e25142e32cc295517e8a5f0
 
