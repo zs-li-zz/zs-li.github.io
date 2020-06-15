@@ -3,7 +3,7 @@ highlighter:      rouge
 
 # Setup
 title:            Zishuo Li
-tagline:          'Research and Stuff'
+tagline:          'Research'
 description:      'I am a PhD Candidate at Tsinghua University, China.'
 url:              https://zs-li.github.io/
 baseurl:          'https://zs-li.github.io/'
