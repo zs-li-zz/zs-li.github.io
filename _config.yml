@@ -4,7 +4,7 @@ theme:  minima
 
 # Setup
 title:            Zishuo Li
-tagline:          'Research'
+tagline:          'Researcher'
 description:      'I am a PhD Candidate at Tsinghua University, China.'
 url:              https://zs-li.github.io/
 baseurl:          'https://zs-li.github.io/'
@@ -20,10 +20,10 @@ paginate_path:    "/notes/page:num"
 # List of Pages
 
 pages_list:
-  - name: Research
-    loc: /research.html
   - name: Publication
     loc: /publication.html
+  - name: Research
+    loc: /research.html
   - name: Notes
     loc: /notes
 
@@ -43,5 +43,5 @@ google_font_server: fonts.useso.com # 360 server for mainland China readers.
 # In case you do not care about Chinese readers, use the default google server
 # google_font_server: fonts.googleapis.com
 
-plugins: 
+plugins:
         - jekyll-paginate
