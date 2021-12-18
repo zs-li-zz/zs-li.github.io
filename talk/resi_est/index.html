@@ -37,7 +37,7 @@
 <!-- <a class="nooutlink" href="url"><img class="state-background your-logo-class" src="whatever.png" alt="Whatever" /></a> -->
 
 <div class="talk-title">
-    <h1 class="no-toc-progress" style="text-align:center;">Resilient Secure Estimation Against Sparse Integrity Attack</h1>
+    <h1 class="no-toc-progress" style="text-align:center;">Resilient Estimation Against Sparse Integrity Attack</h1>
 </div>
 <div class="talk-subtitle">
     <p></p>
@@ -63,8 +63,10 @@
 	<div id="text-table-of-contents">
 	<ul>
 		<li><a href="#slide-background">Background and introduction</a></li>
-		<li><a href="#slide-kf">Resilient state estimation</a></li>
-		<li><a href="#slide-simulation">Simulation and experiment</a></li>
+		<li><a href="#slide-problem-formulation">Problem formulation</a></li>
+		<li><a href="#slide-preliminary-result">Preliminary Results</a></li>
+		<li><a href="#slide-our-work">Our work</a></li>
+		<li><a href="#slide-simu-exp">Simulation and experiment</a></li>
 		<li><a href="#slide-conclusion">Conclusion</a></li>
 	</ul>
 	</div>
@@ -79,7 +81,7 @@
 
 
 
-<section id="slide-background-carbon" class="center">
+<section id="slide-background" class="center">
 	<h2 id="Background and introduction" hidden>Background and introduction</h2>
 	<h4 id="h4_background1">BACKGROUND: Security Problem of Estimation</h4>
 
@@ -144,20 +146,20 @@
 
 </section>
 
-<section>
-	Resilient Estimation
+<section id="slide-problem-formulation">
+	<h3>Resilient Estimation</h3>
 	<div class="r-stack">
 		<div class="fragment fade-out" data-fragment-index="1" >
 			<div class="imgcontainer">
 				<p>
-					<img data-src="figures/estimation_problem.png" alt="Figure" style="margin-top:4%; max-height:200vh" />
+					<img data-src="figures/estimation_problem.png" alt="Figure" style="margin-top:0%; max-height:200vh" />
 				</p>
 			</div>
 		</div>
 		<div class="fragment fade-in" data-fragment-index="1" >
 			<div class="imgcontainer">
 				<p>
-					<img data-src="figures/estimation_problem_attack.png" alt="Figure" style="margin-top:4%; max-height:200vh" />
+					<img data-src="figures/estimation_problem_attack.png" alt="Figure" style="margin-top:0%; max-height:200vh" />
 				</p>
 		</div>
 		</div>
@@ -166,7 +168,7 @@
 </section>
 
 
-<section id="slide-problem-formulation" class="center">
+<section class="center">
 	<h3 id="h3_problem_formulation" hidden>Problem formulation</h3>
 	<h4 id="h4_problem-formulation">Problem Formulation</h4>
 	<div class="outline-text-2" data-id="text-kf">
@@ -245,7 +247,7 @@
 			<strong>Uncertain Sparse</strong> disturbance
 		</li>
 		<li style="margin-top: 5%;">
-			Known nothing about disturbance (can be infinitely large)
+			<strong>Know</strong> nothing about disturbance (can be infinitely large)
 		</li>
 	
 	</div>
@@ -282,7 +284,7 @@
 	</div>
 </section>
 
-<section if="slide-original-kf" class="center">
+<section id="slide-preliminary-result" class="center">
 	<h4 id="h4_kf">Estimator without attack</h4>
 	<p style="font-size:35px;">
 		Kalman filter is the <strong><em style="color:var(--myred);">optimal</em></strong> estimator in an LTI Gaussian system.
@@ -712,7 +714,7 @@ Moreover, the estimation covariance upper bound is monotone increasing w.r.t $\g
 
 
 
-<section id="improvment" class="center">
+<section id="slide-our-work" class="center">
 	<h2 id=""style="font-size:60px;" >Problem and Improvement</h2>
 </section>
 
@@ -972,7 +974,7 @@ We proposed an resilient estimator in the presence of $p$ sparse attack for <str
 
 </section>
 
-<section>
+<section id="slide-simu-exp">
 	<h4>Simulation</h4>
 	<div class="imgcontainer">
 		<div typeof="dcmitype:StillImage" class="figure">
@@ -1125,15 +1127,15 @@ We proposed an resilient estimator in the presence of $p$ sparse attack for <str
 <section>
 	<h4>Resilient Estimation for Model Racecar Drifting Control</h4>
 	<div class="leftcol">
-		<h4>Sensors:</h4>
+	<h4 style="margin-top: 0%;">Sensors:</h4>
 	<li>IMU</li>
 	<li>ZED Stereo Camera</li>
 	<li>2D LiDAR</li>
 
-	<h4>Goal</h4>
+	<h4 style="margin-top: 2%;">Goal</h4>
 	On-board sensor State Estimation for aggressive Driving
 
-	<h4>Challenge</h4>
+	<h4 style="margin-top: 2%;">Challenge</h4>
 	<li>IMU: Violent vibration cause inaccurate</li>
 	<li>Stereo Camera: Image distortion</li>
 	<li>LiDAR: Slow matching speed</li>
@@ -1224,7 +1226,7 @@ We proposed an resilient estimator in the presence of $p$ sparse attack for <str
 
 </section>
 
-<section>
+<section id="slide-conclusion">
 	<h3>Preliminary works</h3>
 	<li>X. Liu, Y. Mo and E. Garone, <strong>Local Decomposition of Kalman Filters and its Application for Secure State Estimation</strong>, in <i>IEEE Transactions on Automatic Control</i>, vol. 66, no. 10, pp. 5037-5044, Oct. 2021, doi: 10.1109/TAC.2020.3044854.</li>
 	<h3 style="margin-top: 1%;">Publishing paper</h3>
@@ -1237,6 +1239,23 @@ We proposed an resilient estimator in the presence of $p$ sparse attack for <str
 	<li>Distributed Resilient Estimation</li>
 </section>
 
+<section>
+	<h4>The slides can be seen at</h4>
+
+	https://zs-li.github.io/talk/resi_est/index.html
+
+	<div class="imgcontainer" style="margin-right: 70%;">
+		<div >
+			<p>
+				<img data-src="figures/QRcode.png" alt="Figure"  style="max-height:1800vh" />
+			</p>
+		</div>
+	</div>
+
+	<div style="margin-top: 25%;">
+<h2>欢迎提问！</h2>
+	</div>
+</section>
 
 
 <!-- <section id="slide-outdoor-network" class="center">
