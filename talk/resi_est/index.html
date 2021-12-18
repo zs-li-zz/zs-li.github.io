@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Resilient Secure Estimation Against Sparse Integrity Attack</title>
+<meta name="author" content="Zishuo Li 李子硕"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/dist/reveal.css"/>
+<link rel="stylesheet" href="./reveal.js/dist/theme/oer-reveal.css" id="theme"/>
+<link rel="stylesheet" href="./reveal.js/plugin/accessibility/helper.css"/>
+<link rel="stylesheet" href="./reveal.js/plugin/toc-progress/toc-progress.css"/>
+<link rel="stylesheet" href="./reveal.js/dist/theme/toc-style.css"/>
+<link rel="stylesheet" href="./reveal.js/dist/theme/fonts/source-sans-pro/source-sans-pro.css"/>
+<link rel="stylesheet" href="./reveal.js/plugin/mine/font-awesome.min.css">
+</head>
+<body prefix="dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#" typeof="dcmitype:InteractiveResource">
+	<style>
+		:root{
+			--myred: #981E32;
+		}
+		:root{
+			--myblue: #0582CA;
+		}
+	</style>
+<div class="reveal">
+<div class="slides">
+
+<section>
+<section id="sec-title-slide" data-state="no-toc-progress"  class="center">
+<!-- The following copyright information only applies to the title slide. -->
+<!-- SPDX-FileCopyrightText: 2017-2019 Jens Lechtenbörger -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+<!-- This is an HTML template for the title slide. -->
+<!-- Embed logos as necessary. -->
+<!-- <a class="nooutlink" href="url"><img class="state-background your-logo-class" src="whatever.png" alt="Whatever" /></a> -->
+
+<div class="talk-title">
+    <h1 class="no-toc-progress" style="text-align:center;">Resilient Secure Estimation Against Sparse Integrity Attack</h1>
+</div>
+<div class="talk-subtitle">
+    <p></p>
+</div>
+<div class="talk-author">
+  	<p style="font-size:40px;text-align:center;">
+	  Zishuo Li  李子硕
+	</p>
+	<p style="font-size:35px;text-align:center;">
+		<strong style="color:black;">Department of Automation, Tsinghua University<br></br></strong>
+	</p>
+	<p style="font-size:40px;text-align:center;">
+		D-COS Zhizhen Academic Forum for Postgraduates， Dec 19, 2021
+	</p>
+</div>
+<div class="c-stack" style="margin-right: 1%;margin-top: 5%;">
+	<img src="./figures/raw/title/logo.png" width="298" height="50">
+</div>
+</section>
+
+<section id="slide-content" class="center">
+	<h3 id="content">Table of Contents</h3>
+	<div id="text-table-of-contents">
+	<ul>
+		<li><a href="#slide-background">Background and introduction</a></li>
+		<li><a href="#slide-kf">Resilient state estimation</a></li>
+		<li><a href="#slide-simulation">Simulation and experiment</a></li>
+		<li><a href="#slide-conclusion">Conclusion</a></li>
+	</ul>
+	</div>
+
+	<div class="slide-footer"><br></div>
+</section>
+
+<!--Background and intro-->
+
+
+
+
+
+
+<section id="slide-background-carbon" class="center">
+	<h2 id="Background and introduction" hidden>Background and introduction</h2>
+	<h4 id="h4_background1">BACKGROUND: Security Problem of Estimation</h4>
+
+	<div>
+		<p style="font-size:40px;">
+			<p style="text-align:center;font-size:28px;" style="margin-top: 8%;">
+				Safety Critical Industries 
+			</p>
+			<div class="r-stack">
+			
+					<img src="./figures/examples.png" width="1200" height="400">
+					
+				
+			</div>
+			<div>
+				<ul style="font-size:40px;">
+					<li>High safety requirements.</li>
+					<li>More vulnerable System</li>
+					<ul>
+						<li>Modern control systems are becoming more <strong>open</strong> to the cyber-world.</li>
+						<li>More <strong>intelligent</strong> algorithms.</li>	
+					</ul>
+						
+				
+				</ul>
+			</li>
+			</div>
+		</p>
+	</div>
+</section>
+
+<section>
+
+<h3>Threats:</h3> 
+
+<div class="r-stack">
+	<span class="fragment fade-out" data-fragment-index="1">
+		<h4>Malicious Attack:</h4>
+		<div>
+			<img src="./figures/stuxnet.jpg" width="650" height="600">
+		</div>
+	</span>
+	<span class="fragment fade-in" data-fragment-index="1">
+		<span class="fragment fade-out" data-fragment-index="2">
+			<h4>Malfunctioning components:</h4>
+		<div>
+			<img src="./figures/boeing.jpg" width="800" height="400">
+		</div>
+	</span>
+	</span>
+	<span class="fragment fade-in" data-fragment-index="2">
+		<h4>Diverse environment:</h4>
+		<div>
+			<img src="./figures/lidar_incons.jpg" width="800" height="400">
+		</div>
+	</span>
+</div>
+
+<div style="margin-top: 3%;">
+	Requires safety-concerned estimators.
+</div>
+
+</section>
+
+<section>
+	Resilient Estimation
+	<div class="r-stack">
+		<div class="fragment fade-out" data-fragment-index="1" >
+			<div class="imgcontainer">
+				<p>
+					<img data-src="figures/estimation_problem.png" alt="Figure" style="margin-top:4%; max-height:200vh" />
+				</p>
+			</div>
+		</div>
+		<div class="fragment fade-in" data-fragment-index="1" >
+			<div class="imgcontainer">
+				<p>
+					<img data-src="figures/estimation_problem_attack.png" alt="Figure" style="margin-top:4%; max-height:200vh" />
+				</p>
+		</div>
+		</div>
+	</div>
+
+</section>
+
+
+<section id="slide-problem-formulation" class="center">
+	<h3 id="h3_problem_formulation" hidden>Problem formulation</h3>
+	<h4 id="h4_problem-formulation">Problem Formulation</h4>
+	<div class="outline-text-2" data-id="text-kf">
+	</div>
+	<ul style="font-size:30px;">
+	<li> System equation:
+		<p style="font-size:25px;">
+			$$
+			x(k+1)=Ax(k)+w(k),
+			$$
+		</p>
+	where $x(k)\in{\color{var(--myred)}{\mathbb{R}^n}}$, $w(k)\sim\mathcal{N}(0,Q)$.
+	</li>
+	<li> Measurement equation of sensor $i$:
+		<p style="font-size:25px;">
+			$$
+				y_i(k)=C_ix(k)+v_i(k)+a_i(k).
+			$$
+		</p>
+	<li> Full measurement equation:
+		<p style="font-size:25px;">
+			$$
+				y(k)=Cx(k)+v(k)+a(k),
+			$$
+		</p>
+	</li>
+	where <p style="font-size:25px;">
+		$$
+		y(k)\triangleq \begin{bmatrix}
+			y_1(k)\\
+			\vdots\\
+			y_m(k)
+		\end{bmatrix}\in {\color{var(--myred)}\mathbb{R}^m}, C\triangleq \begin{bmatrix}
+			C_1\\
+			\vdots\\
+			C_m
+		\end{bmatrix}, v(k)\triangleq \begin{bmatrix}
+			v_1(k)\\
+			\vdots\\
+			v_m(k)
+		\end{bmatrix}\sim\mathcal{N}(0,R),
+		a(k)\triangleq \begin{bmatrix}
+			a_1(k)\\
+			\vdots\\
+			a_m(k)
+		\end{bmatrix}
+		$$
+	</p>
+	</li>
+	<li> <strong><em style="color:var(--myred);">$(A,C)$ is observable</em></strong>. Note that <strong><em style="color:var(--myred);">$(A, C_i)$ is not necessarily observable</em></strong>.</li>
+	<li>Each sensor needs to estimate the state $x$.</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Resilient Estimation vs Robust Estimation</h3>
+	<div class="leftcol" style="width:50%; ">
+		<h4>Robust Estimation</h4>
+	<li style="margin-top: 5%;">
+		(Uncertain) system model
+	</li>
+	<li style="margin-top: 5%;">
+		Full state noise / disturbance
+	</li>
+	<li style="margin-top: 5%;">
+		(Partly) Known noise / disturbance statistic property
+	</li>
+
+	</div>
+	<div class="rightcol" style="width:50%;">
+		<h4>Resilient Estimation</h4>
+		<li style="margin-top: 5%;">
+			Known system model
+		</li>
+		<li style="margin-top: 5%;">
+			<strong>Uncertain Sparse</strong> disturbance
+		</li>
+		<li style="margin-top: 5%;">
+			Known nothing about disturbance (can be infinitely large)
+		</li>
+	
+	</div>
+	<div></div>
+	<span class="fragment fade-in" data-fragment-index="1">
+	<div style="margin-left: 30%; margin-top: 30%;">
+		Resilient:
+		<p>1. 只有部分传感器有问题</p> 
+		<p>2. 不知道是哪些传感器有问题</p>
+		<p>3. 有问题传感器观测可被任意篡改</p>
+	</div>
+</span>
+</section>
+
+<section id="sparse" class="center">
+
+	<div class="leftcol" style="width:50%;">
+		<h4 id="">Sparse Attack</h4>
+
+		The attack is called a $p$-sparse attack if the vector sequence $a(k)$ satisfy that,
+		there exists a time invariant index set $\mathcal{I}\subseteq \mathcal{R}\triangleq\{1,2,\cdots,m\} $ with $|\mathcal{I}| = p$ such that $\bigcup_{k=1}^{\infty} \text{supp}\left\{a(k)\right\} = \mathcal{I}$.
+		<li style="font-size:30px;margin-top: 5%;">
+		一共只有最多p个传感器受到攻击
+		</li>
+	</div>
+<div class="rightcol" style="width:50%;">
+		<h4 id="">Sparse Observability/Detectability</h4>
+		System $(A,C)$ is $s$-sparse observable (detectable) if  system $(A,C_{\mathcal{I}\setminus\mathcal{C}})$ is observable
+	(detectable) for any set of sensors $\mathcal{C}$ with cardinality $|\mathcal{C}| = s$.
+	<li style="font-size:30px;margin-top: 5%;">
+		去掉任意$p$个传感器后系统仍然可观/可测
+	</li>
+
+	</div>
+</section>
+
+<section if="slide-original-kf" class="center">
+	<h4 id="h4_kf">Estimator without attack</h4>
+	<p style="font-size:35px;">
+		Kalman filter is the <strong><em style="color:var(--myred);">optimal</em></strong> estimator in an LTI Gaussian system.
+	$$
+		\begin{aligned}
+			\hat x(k|k-1)&=A\hat x(k-1),\\
+			P(k|k-1)&=AP(k-1)A^T+Q,\\
+			K(k)&=P(k|K-1)C^T[CP(k|k-1)C^T+R]^{-1},\\
+			\hat x(k)&=\hat x(k|k-1)+K(k)[y(k)-C\hat x(k|k-1)],\\
+			P(k)&=[I-K(k)C]P(k|k-1),
+		\end{aligned}
+	$$
+	where $\hat x(0)=0$ and $P(0)=\Sigma$.
+	</p>
+</section>
+
+<section id="Security of Linear Estimator" >
+		<h4 id="">Security of Linear Estimator</h4>
+		<ul style="font-size:40px;">
+			\(
+			\begin{align}
+			\hat{x}(k+1)&=(A-K C A) \hat{x}(k)+K y(k+1),\\
+			&=(A-K C A) \hat{x}(k)+\left[\begin{array}{c|c|c}K_1&\vdots&K_m \end{array}\right]\begin{bmatrix}y_1(k+1)\\ \vdots\\y_m(k+1)\end{bmatrix},\\
+			&=(A-K C A) \hat{x}(k)+\sum_{i=1}^m K_i y_i(k+1),
+			\end{align}
+			\)
+		</ul>
+		<ul style="font-size:40px;margin-right: 20%;margin-top: 3%">
+		<img src="./figures/LE_flow.png" width="900" height="200">
+	</ul>
+</section>
+
+
+<section id="Information Flow of Our Proposed Estimator" class="center">
+	<h4 id="">Information Flow of Our Proposed Estimator</h4>
+    <div class="r-stack" style="margin-top: 5%;">
+    <span class="fragment fade-out" data-fragment-index="1">
+        <img src="./figures/dis_flow1.png" width="800" height="500" style="margin-right:10%;">
+    </span>
+
+    <span class="fragment fade-in" data-fragment-index="1">
+        <img src="./figures/dis_flow2.png" width="800" height="500" style="margin-right:10%;">
+    </span>
+
+    </div>
+	
+</section>
+
+<section id="" class="center" style="font-size: 26t;">
+	<!-- <h4 id="">Local Estimator Design</h4> -->
+	<h4 id="" style="margin-top: 1%">Assumption 1</h4>
+	<li>
+		The matrix $A$ is nonsingular and in Jordan canonical form.
+	</li>
+	<li>
+		The matrix $A − KCA$ and matrix $A$ do not share any eigenvalue.
+	</li>
+	<h4 id="" style="margin-top: 1%">Remark</h4>
+	<li>
+	It does not lose generality, since we can perform invertible linear transformation $T$ on state $x$ and study the following system instead:
+\begin{align*}
+\bar{x}(k)&= \bar{A} \bar{x}(k) + TB\bar{x}(k)+Tw(k),  \\
+y(k)&=CT^{-1}\bar{x}(k)+v(k)+a(k) ,
+\end{align*}
+where $\bar{A}\triangleq TAT^{-1}$ is similar to $A$ and $\bar{x}=Tx$.</li>
+<li>
+	Since $(A,CA)$ is observable, we can freely assign the eigenvalues of $A-KCA$ by choosing $K$ to avoid the eigenvalues of $A$.
+</li>	
+</section>
+
+<section>
+	<h4 id="">Local Estimator Design</h4>
+	<div class="leftcol" style="width:50%;">
+		<div style="margin-bottom: 60%;" class="imgcontainer"><img src="./figures/raw/kalman.png" width="700" height="300"></div>
+		<div style="font-size:30px;">
+			$$
+			\hat{x}(k+1)=(A-KCA)\hat{x}(k)+\sum_{i=1}^m K_i y_i(k+1).
+			$$
+		</div>
+	</div>
+	<div class="rightcol" style="width:50%;">
+		<div style="margin-bottom: 65%;" class="imgcontainer"><img src="./figures/raw/decompose_kalman.png" width="700" height="400"></div>
+		<div style="font-size:30px;">
+			$$
+			\zeta_i(k+1)=\Lambda \zeta_i(k) + \mathbf{1}_n y_i(k+1).
+			$$
+		</div>
+	</div>
+	<div style="font-size:30px;">
+	(where $\Lambda$ is the Jordan canonical form of $A-KCA$.)
+	
+	And $F_i$ is designed such that $\hat{x}$ can be recovered by a linear combination of $\zeta_i$:
+	$$
+	\hat{x}(k)=F_1 \zeta_1(k)+F_2 \zeta_2(k)+\cdots+F_m\zeta_m(k),\ \forall k.
+	$$
+	</div>
+</section>
+
+<!-- <section id="" class="center">
+	<h4 id="">Local Estimator Design</h4>
+
+	The matrix $A − KCA$ can be decomposed into a Jordan form, i.e.,
+	$A − KCA = V\Lambda V^{−1}$.
+	As a result, we have
+	$$
+	V^{-1}\hat{x}(k+1)=\Lambda V^{-1}\hat{x}(k)+\sum_{i=1}^m V^{-1}K_i y_i(k+1).
+	$$
+	We define local estimator $\zeta_i(k)$ as
+	$$
+	\zeta_i(k+1)=\Lambda \zeta_i(k) + \mathbf{1}_n y_i(k+1).
+	$$
+	
+
+</section> -->
+
+<section id="" class="center">
+	<h4 id="">From Linear Combination to Resilient Fusion</h4>
+	<ul>The linear combination is not safe since one corrupted $\zeta_i$ may corrupt the $\tilde{x}$.</ul>
+
+<div class="imgcontainer">
+	<div about="" typeof="dcmitype:StillImage" class="figure">
+		<img src="./figures/dis_flow2.png" width="800" height="500" style="margin-top:5%; margin-right:20%;">
+	</div>
+</div>
+
+	<ul>
+	We replace the linear combination to a resilient fusion scheme. 
+	</ul>
+</section>
+
+<section id="" class="center">
+	<strong>What is $\zeta_i$ estimating ?</strong> 
+	<h4 id="" style="margin-top: 1%">Lemma 1</h4>
+
+		The local estimation $\zeta_i(k)$ is a stable estimation of $G_ix(k)$ where $G_i$ is defined as following and the residue $\epsilon_i(k)\triangleq \zeta_i(k)-G_ix(k)$ satisfy:
+		$$
+		\epsilon_i(k+1)=\Lambda\epsilon_i(k) - (G_i-\mathbf{1}_n C-i) w_i(k)+ \mathbf{1}_n v_i(k)+\mathbf{1}_n a_i(k),
+		$$
+	and
+	<p style="font-size:30px;">
+		$$
+		G_i=\begin{bmatrix}
+		G_{1,i}\\ \vdots \\ G_{p,i}
+		\end{bmatrix}\in\mathbb{C}^{n\times n},\;
+		G_{l, i}=\left[\begin{array}{c}
+		C_{i} A\left(A-\lambda_{l} I\right)^{-n_{l}}+\cdots+C_{i} A\left(A-\lambda_{l} I\right)^{-1} \\
+		\vdots \\
+		C_{i} A\left(A-\lambda_{l} I\right)^{-2}+C_{i} A\left(A-\lambda_{l} I\right)^{-1} \\
+		C_{i} A\left(A-\lambda_{l} I\right)^{-1}
+		\end{array}\right]\in\mathbb{C}^{n_{l} \times n} .
+		$$
+	</p>
+
+</section>
+
+<section id="" class="center" style="font-size:30px;">
+	<h4 id="" >Least Square Fusion Scheme</h4>
+	<p style="font-size:30px;">
+		$$\epsilon_{i}(k+1)= \Lambda \epsilon_{i}(k)\underbrace{-\left(G_{i}-\mathbf{1}_{n} C_{i}\right) w(k) 
+		+\mathbf{1}_{n} v_{i}(k+1)}_{\text{noise term}}
+		\underbrace{+\mathbf{1}_{n} a_{i}(k+1)}_{\text{attack term}} .$$
+	</p>
+	Define $\tilde{W}$ as the stable covariance of $\left[\epsilon_1'(k) \cdots   \epsilon_m'(k)\right]'$ when $a(k)=0$, then $\tilde{W}$ satisfy
+	$$ \tilde{W}=\begin{bmatrix}\Lambda&&\\ &\ddots&\\ &&\Lambda \end{bmatrix} \tilde{W} \begin{bmatrix}\Lambda&&\\ &\ddots&\\ &&\Lambda \end{bmatrix} + \text{Cov}(\text{noise term}),$$
+	<!-- W(k)=\text{Cov}\begin{bmatrix}\epsilon_1(k)\\ \vdots \\ \epsilon_m(k)\end{bmatrix}\in\mathbb{R}^{mn\times mn}, \text{ then } -->
+	We have the following least square problem:
+
+	
+	\begin{align}
+	&\underset{\check{x}(k), \mu(k)}{\operatorname{minimize}} \mu(k)' \tilde{W}^{-1} \mu(k)\\
+	&\text {subject to } \begin{bmatrix}
+	\hat{\zeta}_{1}(k) \\
+	\vdots \\
+	{\zeta}_{m}(k)
+	\end{bmatrix}=
+	\begin{bmatrix}
+	{G}_{1} \\
+	\vdots \\
+	{G}_{m}
+	\end{bmatrix} \check{x}(k)+\mu(k) .
+	\end{align}	
+
+</section>
+
+<section id="LS" class="center" > 
+	<h4 id="" >Least Square Fusion Scheme</h4>
+	<p style="font-size:40px;">
+	\begin{align}
+	&\underset{\check{x}(k), \mu(k)}{\operatorname{minimize}} \mu(k)' \tilde{W}^{-1} \mu(k)\\
+	&\text {subject to } \begin{bmatrix}
+	\zeta_{1}(k) \\
+	\vdots \\
+	{\zeta}_{m}(k)
+	\end{bmatrix}=
+	\begin{bmatrix}
+	{G}_{1} \\
+	\vdots \\
+	{G}_{m}
+	\end{bmatrix} \check{x}(k)+\mu(k) .
+	\end{align}	
+	</p>
+	<h4 id="" >Theorem 1 </h4>
+	In the absence of attack, i.e. $a(k)=\mathbf{0}$, the solution $\check{x}(k)$ of the above optimization problem coincides with the Kalman estimation, i.e., $\check{x}(k)=\hat{x}(k)$.
+</section>
+
+<section id="LASSO" class="center" style="font-size:30px;">
+	<h4 id="" >LASSO Fusion Scheme</h4>
+	<p style="font-size:30px;">
+		\begin{align}
+		&\underset{\tilde{x}(k), \mu(k)}{\operatorname{minimize}} \mu(k)' \tilde{W}^{-1} \mu(k) +\gamma \|\nu(k)\|_1\\
+		&\text {subject to } \begin{bmatrix}
+		\zeta_{1}(k) \\
+		\vdots \\
+		{\zeta}_{m}(k)
+		\end{bmatrix}=
+		\begin{bmatrix}
+		{G}_{1} \\
+		\vdots \\
+		{G}_{m}
+		\end{bmatrix} \tilde{x}(k)+\mu(k) +\nu(k).
+		\end{align}	
+		</p>
+
+	We will prove in the following that:
+	<li>
+		In the absence of attack, our proposed estimation coincides with Kalman for centain probability, i.e. $$\mathbb{P}\left[\tilde{x}(k) = \hat{x}(k)\right]=f(\gamma).$$
+		And $f(\gamma)\rightarrow 1$ if $\gamma\rightarrow +\infty$.
+	</li>
+	<li>
+		In the presence of attack, our proposed estimation is resilient against $p$-sparse attack if one condition is satisfied.
+	</li>
+	
+</section>
+
+
+<section id="intuition of LASSO" class="center" style="font-size:35px;">
+	<h4 id="" >Intuition of LASSO</h4>
+
+	<div class="leftcol">
+		<div class="r-stack">
+			<span class="fragment fade-out" data-fragment-index="1">
+				$$\min_{x,\mu,\nu} \frac{1}{2}\mu'\mu+\gamma\|\nu\|_1$$
+				$$s.t. Y=Hx +\mu+\nu$$
+			</span>
+	
+			<span  class="fragment fade-in" data-fragment-index="1">
+				$$\min_{x,\nu} \frac{1}{2}\|Y-Hx-\nu\|_2^2+\gamma\|\nu\|_1$$
+			</span>
+		</div>
+
+	
+
+
+	If we define the following function:
+	$$
+	f(r) \triangleq \underset{\nu}{\operatorname{min}} \ \frac{1}{2}\|r-\nu\|_{2}^{2} +\gamma\|\nu\|_{1} .
+	$$
+	Then, one can easily prove that the optimization problem can be rewritten as follows:
+	$$
+	\underset{x}{\min }  f\left(Y-H x\right) .
+	$$
+</div>
+<div class="rightcol" style="width:50%;">
+	<div class="imgcontainer" >
+			<img src="./figures/huber_loss.png" width="2500" height="3000">
+	</div>
+</div>
+	
+
+</section>
+
+<section id="intuition of LASSO2" class="center" style="font-size:35px;margin-top: 0%;">
+	<h4 id="" >Intuition of LASSO</h4>
+	<div class="leftcol">
+		<!-- $$\min_{x,\mu} \frac{1}{2}\mu'\mu$$
+		$$s.t. \begin{bmatrix}-1\\ 1 \\10\end{bmatrix}=\begin{bmatrix}1\\ 1 \\1\end{bmatrix}x +\mu$$
+		The solution minimizes $(x+1)^2+(x-1)^2+(x-10)^2$ and is $x=\frac{1}{3}(-1+1+10)$. -->
+
+		<div class="r-stack">
+			<span class="fragment fade-out" data-fragment-index="1">
+			$$\min_{x,\mu} \frac{1}{2}\mu'\mu$$
+			$$s.t. \begin{bmatrix}-1\\ 1 \\10\end{bmatrix}=\begin{bmatrix}1\\ 1 \\1\end{bmatrix}x +\mu$$
+			</span>
+	
+			<span  class="fragment fade-in" data-fragment-index="1">
+				$$\min_{x} \frac{1}{2}\left[(x+1)^2+(x-1)^2+(x-10)^2\right]$$
+			</span>
+		</div>
+		<div class="r-stack">
+			<span  class="fragment fade-in" data-fragment-index="1" style="margin-top: -10%;">
+				<div class="imgcontainer" >
+					<div class="figure">
+						<img src="./figures/three_square.png" width="700" height="300">
+					</div>
+				</div>
+			</span>
+			<span  class="fragment fade-in" data-fragment-index="2" style="margin-top: -10%;">
+				<div class="imgcontainer" >
+					<div class="figure">
+						<img src="./figures/three_line.png" width="700" height="300">
+					</div>
+				</div>
+			</span>
+			<span  class="fragment fade-in" data-fragment-index="3" style="margin-top: -10%;">
+				<div class="imgcontainer" >
+					<div class="figure">
+						<img src="./figures/sum_line.png" width="700" height="300">
+					</div>
+				</div>
+			</span>
+		</div>
+
+	</div>
+	<div class="rightcol">
+
+		<div class="r-stack">
+			<span class="fragment fade-out" data-fragment-index="1">
+				$$\min_{x,\mu} \frac{1}{2}\mu'\mu+\|\nu\|_1$$
+		$$s.t. \begin{bmatrix}-1\\ 1 \\10\end{bmatrix}=\begin{bmatrix}1\\ 1 \\1\end{bmatrix}x +\mu+\nu$$
+			</span>
+	
+			<span  class="fragment fade-in" data-fragment-index="1">
+				$$\min_{x} f(x+1)+f(x-1)+f(x-10)$$
+				$$f(r) \triangleq \underset{\nu}{\operatorname{min}} \ \frac{1}{2}\|r-\nu\|_{2}^{2} +\gamma\|\nu\|_{1}$$
+			</span>
+		</div>
+		<div class="r-stack">
+			<span  class="fragment fade-in" data-fragment-index="1" style="margin-top: -10%;">
+				<div class="imgcontainer" >
+					<div class="figure">
+						<img src="./figures/three_huber.png" width="700" height="300">
+					</div>
+				</div>
+			</span>
+			<span  class="fragment fade-in" data-fragment-index="2" style="margin-top: -10%;">
+				<div class="imgcontainer" >
+					<div class="figure">
+						<img src="./figures/three_phuber.png" width="700" height="300">
+					</div>
+				</div>
+			</span>
+			<span  class="fragment fade-in" data-fragment-index="3" style="margin-top: -10%;">
+				<div class="imgcontainer" >
+					<div class="figure">
+						<img src="./figures/sum_phuber.png" width="700" height="300">
+					</div>
+				</div>
+			</span>
+		</div>
+
+	</div>
+</section>
+
+<section id="LASSO" class="center" style="font-size:30px;">
+	<h4 id="" >LASSO Fusion Scheme</h4>
+	<p style="font-size:30px;">
+		\begin{align}
+		&\underset{\tilde{x}(k), \mu(k)}{\operatorname{minimize}} \mu(k)' \tilde{W}^{-1} \mu(k) +\gamma \|\nu(k)\|_1\\
+		&\text {subject to } \begin{bmatrix}
+		\zeta_{1}(k) \\
+		\vdots \\
+		{\zeta}_{m}(k)
+		\end{bmatrix}=
+		\begin{bmatrix}
+		{G}_{1} \\
+		\vdots \\
+		{G}_{m}
+		\end{bmatrix} \tilde{x}(k)+\mu(k) +\nu(k).
+		\end{align}	
+		</p>
+
+	We will prove in the following that:
+	<li>
+		In the absence of attack, our proposed estimation coincides with Kalman for centain probability, i.e. $$\mathbb{P}\left[\tilde{x}(k) = \hat{x}(k)\right]=f(\gamma).$$
+		And $f(\gamma)\rightarrow 1$ if $\gamma\rightarrow +\infty$.
+	</li>
+	<li>
+		In the presence of attack, our proposed estimation is resilient against $p$-sparse attack if one condition is satisfied.
+	</li>
+	
+</section>
+
+
+<section id="LASSO no attack" class="center" style="font-size:35px;">
+<h4 id="" >Theorem 2 (Optimality without attack)</h4>
+	The solution $\tilde{x}(k)$ of the above optimization equals to Kalman estimation $\hat{x}(k)$ if the following condition is satisfied:
+	$$
+	\left\|\tilde{W}^{-1}\left(I-\left[\begin{array}{c}
+{G}_{1} \\
+\vdots \\
+{G}_{m}
+\end{array}\right]\left[\begin{array}{lll}
+{F}_{1} & \ldots & {F}_{m}
+\end{array}\right]\right) \left(\zeta(k)-Gx(k)\right)\right\| \leq \gamma
+$$
+<h4 id="" ><i>Remark</i></h4>
+<li>
+The probability of this inequality holds can be <strong>explicity calculated</strong> given system parameters.
+</li>
+<li>
+By tuning design parameter $\gamma$, the probability of recovering the Kalman estimation can be adjusted.
+</li>
+</section>
+
+<section id="LASSO with attack" class="center" style="font-size:35px;">
+<h4 id="" >Theorem 3 (Security under attack)</h4>
+	The solution $\tilde{x}(k)$ of the above optimization problem is resilient against $p$-sparse attack if the following condition is satisfied:
+
+$
+\forall x\in\mathbb{R}^n , x\neq 0, \forall \mathcal{C}$ with $|\mathcal{C}|=p,$
+$$
+\sum_{i\in\mathcal{C}} \|G_i x \|_1 < \sum_{i\in\mathcal{I}\setminus\mathcal{C}} \|G_i x \|_1.
+$$
+
+Moreover, the estimation covariance upper bound is monotone increasing w.r.t $\gamma$.
+
+<h4 style="margin-top: 5%;" ><i>Remark</i></h4>
+<li>
+	$\gamma \rightarrow +\infty$ <strong>better</strong> performance without attack, <strong>poor</strong> performance under attack.
+</li>
+<li>
+	$\gamma \rightarrow 0\quad$    <strong>poor</strong> performance without attack, <strong>better</strong> performance under attack.
+</li>
+
+</section>
+
+
+
+
+<section id="improvment" class="center">
+	<h2 id=""style="font-size:60px;" >Problem and Improvement</h2>
+</section>
+
+<section id="problems of result" class="center" style="font-size:35px;">
+	<h4 id="" >Problems of this result</h4>
+	$
+	\forall x\in\mathbb{R}^n , x\neq 0, \forall \mathcal{C}$ with $|\mathcal{C}|=p,$
+	$$
+	\sum_{i\in\mathcal{C}} \|G_i x \|_1 < \sum_{i\in\mathcal{I}\setminus\mathcal{C}} \|G_i x \|_1.
+	$$
+	<li>
+		Computational complexity: actually NP-hard.
+	</li>
+	<li>
+		Not necessary: do not achieve fundamental limit:
+		
+		<div class="imgcontainer">
+			<div about="" typeof="dcmitype:StillImage" class="figure">
+				<img src="./figures/necessity.png" width="1200" height="270" style="margin-top:5%; margin-right:20%;">
+			</div>
+		</div>
+	</li>
+</section>
+
+<section id="Gi structure" class="center" style="font-size:30px;">
+	<!-- <p style="font-size:30px;">
+		$$
+		G_i=\begin{bmatrix}
+		G_{1,i}\\ \vdots \\ G_{p,i}
+		\end{bmatrix}\in\mathbb{C}^{n\times n},\;
+		G_{l, i}=\left[\begin{array}{c}
+		C_{i} A\left(A-\lambda_{l} I\right)^{-n_{l}}+\cdots+C_{i} A\left(A-\lambda_{l} I\right)^{-1} \\
+		\vdots \\
+		C_{i} A\left(A-\lambda_{l} I\right)^{-2}+C_{i} A\left(A-\lambda_{l} I\right)^{-1} \\
+		C_{i} A\left(A-\lambda_{l} I\right)^{-1}
+		\end{array}\right]\in\mathbb{C}^{n_{l} \times n} .
+		$$
+	</p> -->
+Define the observability matrix as 
+<p style="font-size:25px;">
+$$O_i\triangleq\left[\begin{array}{c}
+C_{i} \\
+C_{i} A \\
+\vdots \\
+C_{i} A^{n-1}
+\end{array}\right].$$</p>
+The <strong><em style="color:var(--myblue);">observable subspace</em></strong> with respect to sensor $i$ is $\text{Row}(O_i)=\text{Span} \left[C'_{i},(C_{i}A)',\cdots,\left(C_{i} A^{n-1}\right){'}\right]$.
+
+We have proved the following theorem:
+<h4 id="" >Theorem 4</h4>
+<strong>When all the eigenvalues of $A$ have geometric multiplicity $1$</strong>, then
+<p style="font-size:25px;">
+$$\text{Row}(O_i)=\text{Row}(G_i)=\text{Row}(H_i),$$
+where $$H_i=\begin{bmatrix}\mathbb{I}\{O^{(1)}_i\neq 0\} && \\ &\ddots& \\ &&\mathbb{I}\{O^{(n)}_i\neq 0\}\end{bmatrix}.$$
+</p>
+</section>
+
+<section id="corollary" class="center">
+	<h4 id="" >Corollary 4.1</h4>
+	There exists an invertible $n\times n$ matrix $P_i$ such that $P_iG_i=H_i$.
+	<h4 id="" style="margin-top: 10%;">Corollary 4.2</h4>
+	If the sparse observability index of system $(A,C)$ is $s$, then 
+		\begin{equation}\label{eq:calc_index}
+			s=\min_{j=1,\cdots,n} \sum_{i\in\mathcal{I}}\mathbb{I}\{O^{(j)}_i\neq 0\} -1.
+		\end{equation}
+</section>
+
+<section id="sparse obs" class="center">
+	Define $\tilde{P} \triangleq \text{diag}\left(P_1,\cdots,P_m\right),\ \tilde{M}\triangleq\tilde{P}\tilde{W}\tilde{P}{'}$, we have the following optimization problem:
+	<p style="font-size:30px;">
+		\begin{align}
+		&\underset{\tilde{x}(k), \mu(k)}{\operatorname{minimize}} \mu(k)' \tilde{M}^{-1} \mu(k) +\gamma \|\nu(k)\|_1\\
+		&\text {subject to } \begin{bmatrix}
+		P_1\zeta_{1}(k) \\
+		\vdots \\
+		P_m{\zeta}_{m}(k)
+		\end{bmatrix}=
+		\begin{bmatrix}
+		{H}_{1} \\
+		\vdots \\
+		{H}_{m}
+		\end{bmatrix} \tilde{x}(k)+\mu(k) +\nu(k).
+		\end{align}	
+		</p>
+	<h4 id="" >Theorem 5</h4>
+	<strong>When all the eigenvalues of $A$ have geometric multiplicity $1$</strong>, the solution $\tilde{x}(k)$ of the above optimization problem is resilient against $p$-sparse attack if the system sparse observability index $s$ satisfy $s\geq 2p$.
+</section>
+
+<section id="sparse obs SUMMARY" class="center">
+<div class="imgcontainer">
+	<div about="" typeof="dcmitype:StillImage" class="figure">
+		<img src="./figures/necessity.png" width="1200" height="270" style="margin-top:5%; margin-right:20%;">
+	</div>
+</div>
+<li>	Step 1 done !</li>
+	
+<li>Computational complexity reduced to NP.</li>
+
+</section>
+
+<section id="improvment on stable states" class="center" style="font-size: 28pt;">
+
+<h4>Improvement from observability to detectability</h4>
+
+	Since the stable states will finally converge to 0, the estimation of stable states can be <strong>trivially secure</strong>.
+	We can further relax our condition to $2p$-sparse detectable.
+	
+	<p>
+	Separate matrix $A$ into two parts:
+	\begin{equation*}
+	A=\left[\begin{array}{c} A^\mathcal{U} \ | \ \ A^\mathcal{S}\end{array}\right] ,\ \ x= \left[\begin{array}{c} x^\mathcal{U} \\ x^\mathcal{S}\end{array}\right]
+	\end{equation*}
+</p>
+For example:
+<div class="imgcontainer">
+	<div about="" typeof="dcmitype:StillImage" class="figure">
+		<img src="./figures/state_sep.png" width="850" height="250" style="margin-top:5%; margin-right:20%;">
+	</div>
+</div>
+
+</section>
+
+<section>
+	<h4 id="" >Corollary 4.3</h4>
+	When all the <strong>unstable</strong> eigenvalues of $A$ have geometric multiplicity $1$, then
+	<p style="font-size:30px;">
+	$$\text{Row}(O^\mathcal{U}_i)=\text{Row}(G^\mathcal{U}_i)=\text{Row}(H^\mathcal{U}_i),$$
+	where $$H^\mathcal{U}_i=\begin{bmatrix}\mathbb{I}\{O^{(1)}_i\neq 0\} && \\ &\ddots& \\ &&\mathbb{I}\{O^{(n_u)}_i\neq 0\}\end{bmatrix}.$$
+	</p>
+We proceed to deal with <strong>stable</strong> part.
+<div>
+	<strong><i>Terminology:</i></strong>
+	<div>
+	All the <strong>unstable</strong> eigenvalues of $A$ have geometric multiplicity $1$ $\Leftrightarrow$ <strong>Regular linear system</strong>
+</div>
+</div>
+
+
+</section>
+
+<section class="center" style="font-size: 28pt;">
+	The least square problem we intend to solve looks like:
+	\begin{align*}
+	&\underset{x, \mu}{\operatorname{minimize}}\quad \frac{1}{2} \mu{'} \tilde{M}^{-1} \mu    &\underset{x}{\operatorname{minimize}}\quad \frac{1}{2} \left({Y}-{H}x\right){'} \tilde{M}^{-1} \left({Y}-{H}x\right)  \\
+	& \text{subject to }\quad
+	{Y}=
+	{H}x+\mu. 
+	\end{align*}
+	We show the processing of state entries by a example where $n=2,m=1$ and ${H}=I_{2}$. Suppose $x_1$ is unstable entry and $x_2$ is stable entry.
+	\begin{align*}
+	&\frac{1}{2}\begin{bmatrix}
+	Y_1-x_1\\Y_2-x_2
+	\end{bmatrix}'\tilde{M}^{-1}
+	\begin{bmatrix}
+		Y_1-x_1\\Y_2-x_2
+	\end{bmatrix}+\frac{1}{2}Y_2^2
+	=\frac{1}{2}\begin{bmatrix}Y_1-x_1\\Y_2-x_2\\Y_2
+	\end{bmatrix}'\begin{bmatrix}
+	\tilde{M}^{-1} & 0\\ 0& I
+	\end{bmatrix}
+	\begin{bmatrix}
+	Y_1-x_1\\Y_2-x_2\\Y_2
+	\end{bmatrix}\\
+	=&\frac{1}{2}\left(\begin{bmatrix}
+	1 & &\\&1&\\&1&1 
+	\end{bmatrix}\begin{bmatrix}Y_1-x_1\\Y_2-x_2\\x_2
+	\end{bmatrix}\right)'\begin{bmatrix}
+	\tilde{M}^{-1} & 0\\ 0& I
+	\end{bmatrix}
+	\left(\begin{bmatrix}
+	1 & &\\&1&\\&1&1 
+	\end{bmatrix}
+	\begin{bmatrix}
+	Y_1-x_1\\Y_2-x_2\\x_2
+	\end{bmatrix}\right)
+	\end{align*}
+</section>
+
+<section class="center" style="font-size: 25pt;">
+By the aforementioned operation, we have the following two equivalent least square problems:
+	\begin{align*}
+	\underset{x}{\operatorname{minimize}}\quad \frac{1}{2} \left({Y}-{H}x\right){'} \tilde{M}^{-1} \left({Y}-{H}x\right)   
+	\end{align*}
+	\begin{align*}
+	\underset{x}{\operatorname{minimize}}\quad \frac{1}{2}\begin{bmatrix}{Y}-{H}x\\ x^\mathcal{S}\end{bmatrix}^{'} \widehat{M}^{-1} \begin{bmatrix}{Y}-{H}x\\ x^\mathcal{S}\end{bmatrix}
+	\end{align*}
+	and accordingly, two LASSO:
+	\begin{align*}
+	\underset{x,\nu}{\operatorname{minimize}}\quad \frac{1}{2} \left({Y}-{H}x-\nu\right){'} \tilde{M}^{-1} \left({Y}-{H}x-\nu\right)  +\gamma\|\nu\|_1
+	\end{align*}
+	\begin{align*}
+	\underset{x,\nu}{\operatorname{minimize}}\quad \frac{1}{2}\begin{bmatrix}{Y}-{H}x-\nu\\ x^\mathcal{S}\end{bmatrix}^{'} \widehat{M}^{-1} \begin{bmatrix}{Y}-{H}x-\nu\\ x^\mathcal{S}\end{bmatrix}+\gamma\|\nu\|_1
+	\end{align*}
+	They are equivalent when $\nu=0$.
+</section>
+
+<section class="center" style="font-size: 28pt;">
+By placing $X^\mathcal{S}$ on the second order term, we can prove that estimation error covariance of $x^\mathcal{S}$ is always bounded.
+
+Define
+\begin{align*}
+&{N}\triangleq
+I_{m} \otimes 
+\begin{bmatrix}
+\mathbf{0}_{n_s\times n_u} & I_{n_s}
+\end{bmatrix}
+\in \mathbb{R}^{mn_s\times mn },\
+\mathcal{W}\triangleq \begin{bmatrix}
+ \tilde{P}'^{-1}\tilde{W}^{-1}\tilde{P}^{-1} + {N}{'}{N} & {N}{'} \\
+{N} &  I
+\end{bmatrix}.
+\end{align*}
+<h4>Theorem 6 </h4>
+When the system is <strong>regular</strong>, in the presence of arbitrary $p$-sparse attack, if the system $(A,C)$ is $2p$-sparse <strong>detectable</strong>, the estimation $\tilde{x}(k)$ solved from the following problem is secure.
+
+	\begin{align}\label{pb:resilient_LASSO}
+	\underset{{\tilde{x}}(k), \mu(k),\nu(k)}{\text{minimize}}&\quad \frac{1}{2} 
+	\begin{bmatrix}
+	\mu(k) \\
+	{N} {H} \tilde{x}(k)
+	\end{bmatrix}^{'} \mathcal{W}
+	\begin{bmatrix}
+	\mu(k) \\
+	{N} {H} \tilde{x}(k)
+	\end{bmatrix} + \gamma\left\|\nu(k)\right\|_1  \\
+	\text { subject to }&\quad
+	{Y} (k)= {H} \tilde{x}(k)+\mu(k)+\nu(k) .  
+	\end{align}
+
+</section>
+
+<section>
+	<h4>Fundamental Limit </h4>
+	If the system is not $2p$-sparse detectable, there exists a $p$-sparse attack strategy that no estimator is secure.
+
+	<h4 style="margin-top: 5%;">Proof idea:</h4>
+	<li>Find an attack that yields same $y(k)$ while with different $x(0)$. </li>
+	<li>When $x(0)=0$ attack sensors in set $\mathcal{C_1}$, when $x(0)=\xi$, attack sensors in set $\mathcal{C_2}$.</li>
+	<li>This $\xi$ can be found because  $$ \bigcap_{i\in\mathcal{I}\setminus \mathcal{C_1}\cup\mathcal{C_2} }\operatorname{Ker}(O_i) \neq \varnothing.$$ </li>
+</section>
+
+<section>
+	<h4>Summary</h4>
+
+We proposed an resilient estimator in the presence of $p$ sparse attack for <strong>regular linear system</strong>.
+
+<h4>Theory:</h4>
+<li style="margin-top: 0%">No attack: Coincides with Kalman for certain probability.</li>
+<li>With attack: Resilient when $2p$ detectable, achieve fundamental limit.</li>
+
+<h4>Application:</h4>
+<li>Accuracy</li>
+<ul style="font-size: 35px;">Can recover optimal Kalman without attack. Has bounded error covariance under attack. $\gamma$ balances them.</ul>
+<li>Efficiency</li>
+<ul style="font-size: 35px;">Off-line computation: easy to calculate sparse observability/detectability index.</ul>
+<ul style="font-size: 35px;">On-line computation: solve a strongly convex optimization problem.</ul>
+
+</section>
+
+<section>
+	<h4>Simulation</h4>
+	<div class="imgcontainer">
+		<div typeof="dcmitype:StillImage" class="figure">
+			<p>
+				<img data-src="figures/invpen.png" alt="Figure" style="margin-top:-2%; max-height:150vh" />
+			</p>
+		</div>
+	</div>
+</section>
+
+<section style="font-size: 25px;">
+	<h4>Simulation</h4>
+	$$A=\begin{bmatrix}
+	1  &   2.0\cdot 10^{-2}  &  -2.0\cdot 10^{-4}  &  1.9\cdot 10^{-5}\\
+	0  &   1.0\cdot 10^{0}   & -2.0\cdot 10^{-2}  &   1.8\cdot 10^{-3}\\
+	0  &   1.0\cdot 10^{-5} &   1.0\cdot 10^{0} &   2.0\cdot 10^{-2}\\
+	0  &   1.0\cdot 10^{-3}&  2.1\cdot 10^{-1}  &  9.8\cdot 10^{-1}
+	\end{bmatrix}, C=\begin{bmatrix}1&0&0&0\\ 1&0&0&0\\ 1&0&0&0\\ 0&0&1&0 \end{bmatrix}$$
+	The system dynamic matrix can be written as the following Jordan canonical form by an invertible linear transformation:
+	$$
+	\text{diag}(1.057,1,0.999,0.925),
+	$$
+	and we consider the system after transformation. System matrix $A$ have four Jordan blocks with size $1\times1$ and the upper left two blocks have unstable eigenvalues. Therefore, the set of unstable states and stable states are $\mathcal{U}=\{1,2\},\mathcal{S}=\{3,4\}.$
+	The canonical form of $G_i^\mathcal{U}$ are 
+	\begin{align}
+	H_1^\mathcal{U}=H_2^\mathcal{U}=H_3^\mathcal{U}=\begin{bmatrix}
+	1 & 0 \\
+	0  & 1 \\
+	0  & 0   \\
+	0  & 0 
+	\end{bmatrix},\ H_4^\mathcal{U}=\begin{bmatrix}
+	0 & 0 \\
+	0  & 1 \\
+	0  & 0   \\
+	0  & 0 
+	\end{bmatrix}.
+	\end{align}
+	Only the first 3 sensors can observe unstable state 1, and all the four sensors can observe unstable state 2$.
+	Therefore, the system is 2-sparse detectable and our proposed estimator is secure in the presence of 1 corrupted sensor. 
+</section>
+
+<section>
+	<h4>No attack</h4>
+	<div class="imgcontainer">
+		<div typeof="dcmitype:StillImage" class="figure">
+			<p>
+				<img data-src="figures/no_attack.png" alt="Figure" style=" max-height:400vh" />
+			</p>
+		</div>
+	</div>
+</section>
+<section>
+	<h4>Random data injection attack</h4>
+	<div class="imgcontainer">
+		<div typeof="dcmitype:StillImage" class="figure">
+			<p>
+				<img data-src="figures/rand_added_a.png" alt="Figure" style="margin-top:-2%; max-height:150vh" />
+			</p>
+		</div>
+	</div>
+</section>
+<section>
+	<h4>Random data injection attack</h4>
+	<div class="imgcontainer">
+		<div typeof="dcmitype:StillImage" class="figure">
+			<p>
+				<img data-src="figures/rand_1.png" alt="Figure" style=" max-height:400vh" />
+			</p>
+		</div>
+	</div>
+</section>
+<section>
+	<h4>Slope signal attack</h4>
+	<div class="imgcontainer">
+		<div typeof="dcmitype:StillImage" class="figure">
+			<p>
+				<img data-src="figures/slope_added_a.png" alt="Figure" style="margin-top:-2%; max-height:150vh" />
+			</p>
+		</div>
+	</div>
+</section>
+<section>
+	<h4>Slope signal attack</h4>
+	<div class="imgcontainer">
+		<div typeof="dcmitype:StillImage" class="figure">
+			<p>
+				<img data-src="figures/slope_1.png" alt="Figure" style="max-height:400vh" />
+			</p>
+		</div>
+	</div>
+</section>
+
+<section class="stretch" data-background-video="videos/rand1.mp4" data-background-size="contain" data-background-video-loop="true">
+</section>
+
+<section class="stretch" data-background-video="videos/rand2.mp4" data-background-size="contain" data-background-video-loop="true">
+</section>
+
+<section class="stretch" data-background-video="videos/slope1.mp4" data-background-size="contain" data-background-video-loop="true">
+</section>
+
+<section class="stretch" data-background-video="videos/slope5.mp4" data-background-size="contain" data-background-video-loop="true">
+</section>
+
+<!-- <section>
+	<h4>Estimation for output feedback</h4>
+	<div class="imgcontainer">
+		<div >
+			<p>
+				<img data-src="figures/videos/rand1.mp4" style="max-height:400vh" />
+			</p>
+		</div>
+	</div>
+</section>
+
+<section>
+	<h4>Estimation for output feedback</h4>
+	<div class="imgcontainer">
+		<div >
+			<p>
+				<img data-src="figures/rand2.gif" alt="Figure" style="max-height:400vh" />
+			</p>
+		</div>
+	</div>
+</section>
+
+
+<section>
+	<h4>Estimation for output feedback</h4>
+	<div class="imgcontainer">
+		<div >
+			<p>
+				<img data-src="figures/slope1.gif" alt="Figure" style="max-height:400vh" />
+			</p>
+		</div>
+	</div>
+</section>
+
+<section>
+	<h4>Estimation for output feedback</h4>
+	<div class="imgcontainer">
+		<div >
+			<p>
+				<img data-src="figures/slope5.gif" alt="Figure" style="max-height:400vh" />
+			</p>
+		</div>
+	</div>
+</section> -->
+
+<section>
+	<h4>Resilient Estimation for Model Racecar Drifting Control</h4>
+	<div class="leftcol">
+		<h4>Sensors:</h4>
+	<li>IMU</li>
+	<li>ZED Stereo Camera</li>
+	<li>2D LiDAR</li>
+
+	<h4>Goal</h4>
+	On-board sensor State Estimation for aggressive Driving
+
+	<h4>Challenge</h4>
+	<li>IMU: Violent vibration cause inaccurate</li>
+	<li>Stereo Camera: Image distortion</li>
+	<li>LiDAR: Slow matching speed</li>
+
+	</div>
+	<div class="rightcol">
+	<div class="imgcontainer">
+		<div >
+			<p>
+				<img data-src="videos/drifting1.gif" alt="Figure" style="max-height:400vh" />
+			</p>
+		</div>
+	</div>
+	</div>
+</section>
+	
+<section>
+	<h4>Basic set up</h4>
+	<div class="imgcontainer">
+		<div >
+			<p>
+				<img data-src="figures/set_up.png" alt="Figure" style="max-height:600vh" />
+			</p>
+		</div>
+	</div>
+</section>
+
+
+<section>
+	<h4>Sensor property</h4>
+	<div class="imgcontainer">
+		<div >
+			<p>
+				<img data-src="figures/sensors.png" alt="Figure" style="max-height:600vh" />
+			</p>
+		</div>
+	</div>
+</section>
+
+<section>
+	<h4>Sensor property</h4>
+	<div class="imgcontainer">
+		<div >
+			<p>
+				<img data-src="figures/sensors2.png" alt="Figure" style="max-height:600vh" />
+			</p>
+		</div>
+	</div>
+</section>
+<section>
+	<h3>Sensor comparison</h3>
+	<div class="imgcontainer" style="margin-right: 15%;">
+		<div >
+			<p>
+				<img data-src="figures/sensors2.png" alt="Figure" style="max-height:80vh," />
+			</p>
+		</div>
+	</div>
+	<div class="leftcol">
+		<h5>Camera+IMU coarse estimation:</h5>
+		<li>High frequency (100Hz)</li>
+		<li>No out liers or interrupt</li>
+		<li>Drifting growing error</li>
+	</div>
+	<div class="leftcol">
+		<h5>Camera+IMU coarse estimation:</h5>
+		<li>Low frequency (30-60Hz)</li>
+		<li>Out liers and interrupt</li>
+		<li>No drifting growing error</li>
+	</div>
+</section>
+
+<section>
+	<h3>Fusion Result</h3>
+
+	<div class="imgcontainer" >
+		<div >
+			<p>
+				<img data-src="figures/our_fusion.png" alt="Figure"  style="max-height:1800vh" />
+			</p>
+		</div>
+	</div>
+</section>
+
+<section>
+	<h3>Model Racecar drifting </h3>
+	<video data-autoplay src="videos/final_result.mp4" data-video-loop="true"></video>
+
+</section>
+
+<section>
+	<h3>Preliminary works</h3>
+	<li>X. Liu, Y. Mo and E. Garone, <strong>Local Decomposition of Kalman Filters and its Application for Secure State Estimation</strong>, in <i>IEEE Transactions on Automatic Control</i>, vol. 66, no. 10, pp. 5037-5044, Oct. 2021, doi: 10.1109/TAC.2020.3044854.</li>
+	<h3 style="margin-top: 1%;">Publishing paper</h3>
+	<li>ZiShuo Li, Yilin Mo, <strong>Low Complexity Secure State Estimation Design for Linear System with Non-derogatory Dynamics</strong>, <i>2021 IEEE 60th Conference on Decision and Control (CDC)</i>, 2021, accepted.</li>
+	<li>
+	ZiShuo Li, Yilin Mo, <strong>Efficient Secure State Estimation against Sparse Integrity Attack for System with Non-derogatory Dynamics</strong>, in <i>International Journal of Robust and Nonlinear Control</i>, 2nd round review.</li>
+
+	<h3 style="margin-top: 1%;">Future Work</h3>
+	<li>Asynchronous Non-uniform Sampled Measurements</li>
+	<li>Distributed Resilient Estimation</li>
+</section>
+
+
+
+<!-- <section id="slide-outdoor-network" class="center">
+	<h4>EXPERIMENT: NETWORK TRAFFIC</h4>
+	<div style="width: 85%;text-align: center;">
+	<canvas data-chart="bar"> -->
+		<!--{
+			"data" : {
+			"datasets" : [{ "backgroundColor": "#981E32" }, { "backgroundColor": "#0582CA" } ]
+			},
+			"options": {
+				"title":{
+					"text": "Mean network traffic v.s. time",
+					"display": true
+				},
+				"scales":{
+					"yAxes": [{
+						"scaleLabel":{
+							"display": true,
+							"fontColor": "black",
+							"fontSize": 30,
+							"labelString": "Mean network traffic/KiB per second"
+						}
+					}],
+					"xAxes": [{
+						"scaleLabel":{
+							"display": true,
+							"fontColor": "black",
+							"fontSize": 30,
+							"labelString": "Time/min"
+						}
+					}]
+				}
+			}
+
+		}-->
+		<!-- ,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+		Sensor with 3 neighbors in DSE algorithm, 0.07483333, 0.0795, 0.07466667, 0.07783333, 0.07516667, 0.07616667, 0.07633333, 0.0785, 0.09, 0.08233333, 0.07583333, 0.077, 0.07583333, 0.07716667, 0.0735
+		Center of CKF, 0.82, 1.38, 1.66, 1.38, 1.29, 1.12, 1.38, 0.98, 0.9, 1.18, 1.1, 1.38, 0.84, 1.15, 1.07
+	</canvas>
+	</div>
+	<div class="r-stack" style="margin-bottom: 9%;">
+		<p style="font-size:35px;">In this sensor network with <strong><em style="color:var(--myred);">15 sensors</em></strong>, the means traffic of our DSE algorithm is nearly <strong><em style="color:var(--myred);">$\frac{1}{10}$</em></strong> of that of the center in CKF.</p>
+	</div>
+</section>
+
+<section id="slide-indoor-placement" data-background-image="./figures/raw/simulation/real_room.jpg">
+	<h4 id="experiment">EXPERIMENT: INDOOR TEMPERATURE MONITORING</h4>
+</section>
+
+<section id="slide-indoor-placement2" data-background-image="./figures/raw/simulation/indoor_pic.png" data-background-size="900px">
+	<h4 id="experiment">EXPERIMENT: INDOOR TEMPERATURE MONITORING</h4>
+	<span class="r-stack" style="margin-top: 43%;margin-left: -6%;">
+		<ul style="font-size:35px;">
+			<li>We discretize the heat transfer process into <strong><em style="color:var(--myred);">$n=25$ states</em></strong>.</li>
+			<li><strong><em style="color:var(--myred);">$m=12$</em></strong> sensors are deployed. </li>
+		</ul>
+	</span>
+</section>
+
+<section id="slide-indoor-gif" class="center" data-background-image="./figures/raw/simulation/indoor_animation.gif" data-background-size="contain">
+</section> -->
+
+<!--Conclusion-->
+<!-- <section id="slide-conclusion" class="center">
+	<h2 id="h2_conclusion" hidden>Conclusion</h2>
+	<h3 id="h3_conclusion" hidden>Conclusion</h3>
+	<h4 id="conclusion">CONCLUSION</h4>
+	<div class="outline-text-2" id="text-conclusion"></div>
+
+	<ul>
+		<li>Based on a <strong><em style="color:var(--myred);">lossless decomposition</em></strong> of steady-state Kalman filter, we decouple the <strong><em style="color:var(--myred);">local filter</em></strong> from the <strong><em style="color:var(--myred);">synchronization process</em></strong>.</li>
+		<li>We bridge the gap between the problem of <strong><em style="color:var(--myred);">linear system synchronization</em></strong> and <strong><em style="color:var(--myred);">DSE</em></strong>. All of the <strong><em style="color:var(--myred);">strong synchronization algorithms</em></strong> can be applied in our framework.</li>
+		<li>By performing model reduction, the <strong><em style="color:var(--myred);">message complexity</em></strong> can be reduced to <strong><em style="color:var(--myred);">$O(\min(m, n))$</em></strong>.</li>
+		<li>The <strong><em style="color:var(--myred);">performance</em></strong> of our algorithm is <strong><em style="color:var(--myred);">analyzed</em></strong> and <strong><em style="color:var(--myred);">validated</em></strong> with simulation and experiments.</li>
+	</ul>
+	<div class="slide-footer"><br></div>
+</section>
+
+<section id="slide-thanks" class="center">
+	<div style="font-size:100px;text-align:center;">
+		<strong>Thanks!</strong>
+	</div>
+</section>
+
+<section id="slide-bibliography">
+	<h3 id="h3_bibliography" hidden>Bibliography</h3>
+	<h4 id="bibliography">Bibliography</h4>
+	<ul class='org-ref-bib'>
+		<li><a id="Mao2012">[Mao2012]</a> <a name="Mao2012"></a>X. Mao, X. Miao, Y. He, X. Li and Y. Liu, "CitySee: Urban CO2 monitoring with sensors," 2012 Proceedings IEEE INFOCOM, 2012, pp. 1611-1619.</li>
+		<li><a id="Jia2020">[Jia2020]</a> <a name="Jia2020"></a>Q. Jia, J. Tang, J. Wu, X. Hu, Y. Lin, and H. Xia. "Reinforcement learning for green and reliable data center," Chinese Journal of Intelligent Science and Technology, 2020, 2(4): 341-347.</li>
+		<li><a id="Shehabi2016">[Shehabi2016]</a> <a name="Shehabi2016"></a>A. Shehabi, S. Smith, D Sartor and R. Brown. "United States Data Center Energy Usage Report," 2016.</li>
+
+		<li><a id="Olfati-Saber2009">[Olfati-Saber2009]</a> <a name="Olfati-Saber2009"></a>R. Olfati-Saber, "Kalman-Consensus Filter : Optimality, stability, and performance," Proceedings of the 48h IEEE Conference on Decision and Control (CDC) held jointly with 2009 28th Chinese Control Conference, 2009, pp. 7036-7042.</li>
+		<li><a id="Li2018">[Li2018]</a> <a name="Li2018"></a>W. Li, G. Wei, D. W. C. Ho and D. Ding, "A Weightedly Uniform Detectability for Sensor Networks," in IEEE Transactions on Neural Networks and Learning Systems, vol. 29, no. 11, pp. 5790-5796, Nov. 2018.</li>
+		<li><a id="Battistelli2014">[Battistelli2014]</a> <a name="Battistelli2014"></a>G. Battistelli and L. Chisci, “Kullback–Leibler average, consensus on probability densities, and distributed state estimation with guaranteed stability,” Automatica, vol. 50, no. 3, pp. 707–718, 2014.</li>
+
+		<li><a id="He2020">[He2020]</a> <a name="He2020"></a>S. He, H. Shin, S. Xu and A. Tsourdos, "Distributed estimation over a low-cost sensor network: A Review of state-of-the-art," in Information Fusion, vol. 54, pp. 21-43, 2020.</li>
+
+
+		<li><a id="Gu2012">[Gu2012]</a> <a name="Gu2012"></a>G. Gu, L. Marinovici and F. L. Lewis, "Consensusability of Discrete-Time Dynamic Multiagent Systems," in IEEE Transactions on Automatic Control, vol. 57, no. 8, pp. 2085-2089, Aug. 2012.</li>
+		<li><a id="Xu2020">[Xu2020]</a> <a name="Xu2020"></a>L. Xu, Y. Mo and L. Xie, "Distributed Consensus Over Markovian Packet Loss Channels," in IEEE Transactions on Automatic Control, vol. 65, no. 1, pp. 279-286, Jan. 2020.</li>
+		<li><a id="Liu2016">[Liu2016]</a> <a name="Liu2016"></a>X. Liu, J. Lam, W. Yu and G. Chen, "Finite-Time Consensus of Multiagent Systems With a Switching Protocol," in IEEE Transactions on Neural Networks and Learning Systems, vol. 27, no. 4, pp. 853-862, April 2016.</li>
+
+		<li><a id="You2011">[You2011]</a> <a name="You2011"></a>K. You and L. Xie, "Network Topology and Communication Data Rate for Consensusability of Discrete-Time Multi-Agent Systems," in IEEE Transactions on Automatic Control, vol. 56, no. 10, pp. 2262-2275, Oct. 2011.</li>
+		<li><a id="Zhang2021">[Zhang2021]</a> <a name="Zhang2021"></a>J. -L. Zhang, X. Chen and G. Gu, "State Consensus for Discrete-Time Multiagent Systems Over Time-Varying Graphs," in IEEE Transactions on Automatic Control, vol. 66, no. 1, pp. 346-353, Jan. 2021.</li>
+
+	</ul>
+	<div class="slide-footer"><br></div>
+</section>
+
+<section id="slide-backup">
+	<h4>EXPERIMENT: NETWORK TRAFFIC</h4>
+	<div style="width: 85%;text-align: center;">
+	<canvas data-chart="bar"> -->
+		<!--{
+			"data" : {
+			"datasets" : [{ "backgroundColor": "#981E32" }, { "backgroundColor": "#0582CA" } ]
+			},
+			"options": {
+				"title":{
+					"text": "Mean network traffic v.s. time",
+					"display": true
+				},
+				"scales":{
+					"yAxes": [{
+						"scaleLabel":{
+							"display": true,
+							"fontColor": "black",
+							"fontSize": 30,
+							"labelString": "Mean network traffic/KiB per second"
+						}
+					}],
+					"xAxes": [{
+						"scaleLabel":{
+							"display": true,
+							"fontColor": "black",
+							"fontSize": 30,
+							"labelString": "Time/min"
+						}
+					}]
+				}
+			}
+
+		}-->
+		<!-- ,0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+		Sensor with 3 neighbors in DSE algorithm, 0.69, 0.07483333, 0.0795, 0.07466667, 0.07783333, 0.07516667, 0.07616667, 0.07633333, 0.0785, 0.09, 0.08233333, 0.07583333, 0.077, 0.07583333, 0.07716667, 0.0735
+		Center of CKF, 1.32, 0.82, 1.38, 1.66, 1.38, 1.29, 1.12, 1.38, 0.98, 0.9, 1.18, 1.1, 1.38, 0.84, 1.15, 1.07
+	</canvas>
+	</div>
+	<div class="r-stack" style="margin-bottom: 9%;">
+		<p style="font-size:35px;">Let each sensor <strong><em style="color:var(--myred);">broadcast its $C_i$</em></strong> at the beginning so that each sensor can have access to <strong><em style="color:var(--myred);">global information</em></strong> which it needs.</p>
+	</div>
+</section>
+</section> -->
+
+
+
+<style type="text/css"> div.flushright{text-align:right;} </style>
+<script src="./reveal.js/plugin/chart/Chart.min.js"></script>
+<script src="./reveal.js/plugin/chart/plugin.js"></script>
+<script src="./reveal.js/plugin/mine/chartjs-plugin-colorschemes.js"></script>
+<script src="./reveal.js/plugin/mine/bokeh-2.2.2.min.js"></script>
+<script src="./reveal.js/plugin/mine/bokeh-widgets-2.2.2.min.js"></script>
+<script src="./reveal.js/plugin/mine/bokeh-tables-2.2.2.min.js"></script>
+<script type="text/javascript" sync src="https://cdn.bootcdn.net/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+
+<script src="./reveal.js/dist/reveal.js"></script>
+<script src="./reveal.js/plugin/notes/notes.js"></script>
+<script src="./reveal.js/plugin/search/search.js"></script>
+<script src="./reveal.js/plugin/zoom/zoom.js"></script>
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+
+Reveal.initialize({
+controls: true,
+progress: true,
+history: true,
+center: false,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+mouseWheel: true,
+fragmentInURL: true,
+hashOneBasedIndex: false,
+pdfSeparateFragments: false,
+
+overview: true,
+
+transition: 'fade',
+transitionSpeed: 'default',
+margin: 0.01,
+  width: 1080,
+	height: 540,
+
+// Optional libraries used to extend reveal.js
+dependencies: [
+{src:'./reveal.js/plugin/spotlight/spotlight.js'},
+{src: './reveal.js/plugin/math/math.js', async:true},
+{src: './reveal.js/plugin/math/math-gc.js'}, 
+{src: './reveal.js/plugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize('reduce', 'rgba(120,138,130,0.2)', 'body'); }}
+],
+
+chart: {
+  defaults: {
+	  	global:{
+			defaultFontSize: 20,
+			title:{
+				display: true,
+				fontColor: "black",
+				fontSize: 40
+			},
+			scales: {
+				scaleLabel: { fontColor: "black"},
+				gridLines: { color: "#FFF", zeroLineColor: "#FFF" }
+			} ,
+			legend:{
+					display: true,
+					labels: {fontColor: "black", fontSize: 30 }
+			}
+		}
+	}
+},
+
+plugins: [RevealNotes, RevealSearch, RevealZoom, RevealChart], spotlight: {toggleSpotlightOnMouseDown: false}, keyboard: {84: function() { RevealSpotlight.toggleSpotlight() }}, width: 1366, height: 768, margin: 0.1,
+audioStartAtFragment: true,
+  audio: {
+    advance: -1, autoplay: false, defaultDuration: 0, defaultAudios: false, playerOpacity: 0.8, playerStyle: 'position: fixed; bottom: 9.5vh; left: 0%; width: 30%; height:30px; z-index: 33;' },
+anything: [
+        // Following initialization code for class animate from anything-demo.html.
+        // Copyright (c) 2016 Asvin Goel, under The MIT License (MIT).
+	{className: "animate",  initialize: (function(container, options){
+		Reveal.addEventListener( 'fragmentshown', function( event ) {
+			if (typeof event.fragment.beginElement === "function" ) {
+				event.fragment.beginElement();
+			}
+		});
+		Reveal.addEventListener( 'fragmenthidden', function( event ) {
+			if (event.fragment.hasAttribute('data-reverse') ) {
+				var reverse = event.fragment.parentElement.querySelector('[id=\"' + event.fragment.getAttribute('data-reverse') + '\"]');
+				if ( reverse && typeof reverse.beginElement === "function" ) {
+					reverse.beginElement();
+				}
+			}
+		});
+		if ( container.getAttribute("data-svg-src") ) {
+			var xhr = new XMLHttpRequest();
+			xhr.onload = function() {
+				if (xhr.readyState === 4) {
+					var svg = container.querySelector('svg');
+					container.removeChild( svg );
+					container.innerHTML = xhr.responseText + container.innerHTML;
+					if ( svg ) {
+						container.querySelector('svg').innerHTML = container.querySelector('svg').innerHTML + svg.innerHTML;
+					}
+				}
+				else {
+					console.warn( "Failed to get file. ReadyState: " + xhr.readyState + ", Status: " + xhr.status);
+				}
+			};
+			xhr.open( 'GET', container.getAttribute("data-svg-src"), true );
+			xhr.send();
+		}
+	}) },
+	{className: "randomPic",
+	 defaults: {imgalt: "Dummy alt text",
+		    imgcaption: "Image by {name}",
+		    choices: [ {name: "dummyname", path: "dummypath"} ]},
+	 initialize: (function(container, options){
+	     var choice = Math.trunc( Math.random()*(options.choices.length) );
+	     var img = "<img src='" + options.choices[choice].path + "' alt='" + options.choices[choice].imgalt + "' />";
+	     var caption = options.imgcaption.replace(new RegExp('\{name\}', 'gm'), options.choices[choice].name);
+	     container.innerHTML = img + caption;
+	 }) },
+	{className: "notes",
+	 initialize: (function(container, options){
+	     container.addEventListener('click', function(e) { Reveal.getPlugins().notes.open(); });
+	 }) }
+],
+coursemod: { enabled: true, shown: false },
+});
+</script>
+
+<script>
+Reveal.configure({
+  keyboard: {
+    39: 'next', // go to the next slide when the ENTER key is pressed
+    37: 'prev' // don't do anything when SPACE is pressed (i.e. disable a reveal.js default binding)
+  }
+})
+</script>
+</body>
+</html>

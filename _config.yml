@@ -24,6 +24,8 @@ pages_list:
     loc: /publication.html
   - name: Research
     loc: /research.html
+  - name: Talk
+    loc: /talk
   - name: Notes
     loc: /notes
 

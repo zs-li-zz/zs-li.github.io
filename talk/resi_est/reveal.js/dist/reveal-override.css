@@ -1,0 +1,9 @@
+body:after {
+    content: url(../../figures/raw/small_tsinghua.png);
+    position: fixed;
+    top: 2em;
+    right: 3em;
+    width: 3em;
+    width: 3em;
+    height: auto;
+}
